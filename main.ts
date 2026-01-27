@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
       return new Response("Username is required", { status: 400 });
     }
     
-    const inviteCode = formData.get("invite_code") as string;
+    const inviteCode = formData.get("inviteCode") as string;
     if (inviteCode !== Deno.env.get("INVITE_CODE")) {
       return new Response("Invalid invite code", { status: 403 });
     }
