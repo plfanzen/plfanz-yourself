@@ -1,4 +1,4 @@
-import "@std/dotenv/load";
+import "jsr:@std/dotenv/load";
 import { Octokit } from "https://esm.sh/octokit?dts";
 
 const html = await Deno.readTextFile("index.html");
