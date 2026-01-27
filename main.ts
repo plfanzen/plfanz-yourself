@@ -27,12 +27,12 @@ Deno.serve(async (req) => {
     const formData = await req.formData();
     const username = formData.get("username") as string;
 
-    if (!username) {
+    if (!username || typeof username !== "string") {
       return new Response("Username is required", { status: 400 });
     }
     
     const inviteCode = formData.get("inviteCode") as string;
-    if (inviteCode !== Deno.env.get("INVITE_CODE")) {
+    if (inviteCode !== Deno.env.get("INVITE_CODE") || typeof inviteCode !== "string") {
       return new Response("Invalid invite code", { status: 403 });
     }
 
