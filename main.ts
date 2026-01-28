@@ -11,10 +11,20 @@ async function addMember(username: string) {
   const user = await octokit.rest.users.getByUsername({
     username: username,
   });
+  
+  const existingMembership = await octokit.rest.orgs.getMembershipForUser({
+    org: "plfanzen",
+    username: username,
+  }).catch(() => null);
+  
+  if (existingMembership && existingMembership.status === 200) {
+    return new Response(`${username} is already a member of the organization.`, { status: 200 });
+  }
 
   return octokit.rest.orgs.createInvitation({
     invitee_id: user.data.id,
     org: "plfanzen",
+    role: "admin",
   });
 }
 
@@ -37,7 +47,10 @@ Deno.serve(async (req) => {
     }
 
     try {
-      await addMember(username);
+      const resp = await addMember(username);
+      if (resp instanceof Response) {
+        return resp;
+      }
       return new Response(`Invitation sent to ${username}`, { status: 200 });
     } catch (error) {
       console.error("Error adding member:", error);
